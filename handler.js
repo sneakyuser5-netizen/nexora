@@ -161,14 +161,20 @@ if (
         session.get(jid) ||
         session.get(msg.key?.remoteJidAlt);
 
-    // Allow the owner's quality selection while a download
-    // session is active, even when remoteJidAlt is missing.
-    if (
-        !(
-            activeSession?.type === "media_quality" &&
-            ["1", "2"].includes(text.trim())
-        )
-    ) {
+    // Allow valid replies to active interactive sessions.
+    // Ignore unrelated outgoing messages from the bot itself.
+    const answer = text.trim().toLowerCase();
+
+    const validReplies = {
+        media_quality: ["1", "2"],
+        clear: ["0", "1", "2", "3", "4", "5"],
+        kickall: ["yes", "no"]
+    };
+
+    const allowedReplies =
+        validReplies[activeSession?.type] || [];
+
+    if (!allowedReplies.includes(answer)) {
         return;
     }
 }
