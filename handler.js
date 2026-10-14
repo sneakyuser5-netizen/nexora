@@ -5,6 +5,7 @@ const config = require("./config");
 const settings = require("./lib/settings");
 const sudo = require("./lib/sudo");
 const ownerDB = require("./lib/owner");
+const { loadPlugins } = require("./core/pluginManager");
 const commands = new Map();
 const cooldowns = new Map();
 const session = require("./lib/session");
@@ -37,6 +38,20 @@ function loadCommands(dir = "./commands") {
             }
         }
         console.log("✅ Command loaded:", command.name);
+    }
+}
+
+function loadPluginCommands() {
+    const plugins = loadPlugins();
+
+    for (const [name, plugin] of plugins) {
+        if (!plugin || typeof plugin.execute !== "function") {
+            console.warn("⚠️ Invalid plugin skipped:", name);
+            continue;
+        }
+
+        commands.set(name.toLowerCase(), plugin);
+        console.log("🔌 Plugin loaded:", name);
     }
 }
 
@@ -142,15 +157,16 @@ if (
     msg.key?.fromMe &&
     !text?.trim().startsWith(prefix)
 ) {
-    const activeSession = session.get(jid);
+    const activeSession =
+        session.get(jid) ||
+        session.get(msg.key?.remoteJidAlt);
 
-    // Allow the owner's interactive reply (1/2) from the
-    // same WhatsApp account, but ignore messages generated
-    // by the bot itself.
+    // Allow the owner's quality selection while a download
+    // session is active, even when remoteJidAlt is missing.
     if (
         !(
             activeSession?.type === "media_quality" &&
-            msg.key?.remoteJidAlt
+            ["1", "2"].includes(text.trim())
         )
     ) {
         return;
@@ -460,6 +476,7 @@ function getCommands() {
 
 module.exports = {
     loadCommands,
+    loadPluginCommands,
     handleMessage,
     commands,
 };
