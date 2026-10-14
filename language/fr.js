@@ -324,7 +324,7 @@ module.exports = {
   "info.news_no_api": "NEWS_𝘼𝙋𝙄_KEY n’est pas configurée.",
 
   "admin_count_message": "📊 *𝙉𝙤𝙢𝙗𝙧𝙚 𝙩𝙤𝙩𝙖𝙡 𝙙’𝙖𝙙𝙢𝙞𝙣𝙞𝙨𝙩𝙧𝙖𝙩𝙚𝙪𝙧𝙨 :* _{count}_",
-  "github_title": "📂 *𝙂𝙞𝙩𝙃𝙪𝙗 𝙙𝙚 𝙒𝙝𝙞𝙨𝙥𝙚𝙧𝘽𝙤𝙩*",
+  "github_title": "📂 *𝙂𝙞𝙩𝙃𝙪𝙗 𝙙𝙚 𝙉𝙀𝙓𝙊𝙍𝘼*",
   "github_repository": "Dépôt :",
   "github_star": "Si vous aimez NEXORA, laissez une ⭐ au dépôt.",
 

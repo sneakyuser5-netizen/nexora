@@ -333,7 +333,7 @@ module.exports = {
   "tools.shorturl_result": "🔗 *𝙎𝙝𝙤𝙧𝙩 𝙐𝙍𝙇*\n\n🌐 Original:\n{original}\n\n✂️ Short:\n{short}",
 
   "admin_check_confirmed": "✅ *𝘼𝙙𝙢𝙞𝙣 𝙘𝙝𝙚𝙘𝙠 𝙘𝙤𝙢𝙥𝙡𝙚𝙩𝙚*",
-  "github_title": "📂 *𝙒𝙝𝙞𝙨𝙥𝙚𝙧𝘽𝙤𝙩 𝙂𝙞𝙩𝙃𝙪𝙗*",
+  "github_title": "📂 *𝙉𝙀𝙓𝙊𝙍𝘼 𝙂𝙞𝙩𝙃𝙪𝙗*",
   "github_repository": "Repository:",
   "github_star": "Enjoy NEXORA? Give the repository a ⭐.",
 
