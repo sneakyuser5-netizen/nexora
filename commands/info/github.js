@@ -10,7 +10,7 @@ module.exports = {
 
         const jid = msg.key.remoteJid;
 
-        const repo = "https://github.com/sneakyuser5-netizen/The_whisperer_bot";
+        const repo = "https://github.com/sneakyuser5-netizen/nexora";
 
         await sock.sendMessage(jid, {
             text:
