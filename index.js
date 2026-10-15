@@ -2,7 +2,7 @@ const { t } = require("./lib/lang");
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require("@whiskeysockets/baileys");
 const pino = require("pino");
 const fs = require("fs");
-const { loadCommands, handleMessage } = require("./handler");
+const { loadCommands, loadPluginCommands, handleMessage } = require("./handler");
 const { loadEvents, runEvents } = require("./eventHandler");
 const settings = require("./lib/settings");
 
@@ -111,6 +111,7 @@ sock.ev.on("messages.upsert", async ({ messages, type }) => {
 
         // load commands ONCE
         loadCommands();
+        loadPluginCommands();
         loadEvents();
 
 
