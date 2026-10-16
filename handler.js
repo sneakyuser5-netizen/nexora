@@ -174,7 +174,10 @@ if (
     const allowedReplies =
         validReplies[activeSession?.type] || [];
 
-    if (!allowedReplies.includes(answer)) {
+    if (
+        !allowedReplies.includes(answer) &&
+        activeSession?.type !== "schedule"
+    ) {
         return;
     }
 }
@@ -239,7 +242,94 @@ ${t(jid, "owner.afk_return_footer")}`
 
     // Handle interactive sessions
     if (!body.startsWith(prefix)) {
-        const current = session.get(jid);
+        const current =
+            session.get(jid) ||
+            session.get(msg.key?.remoteJidAlt);
+
+        // ==========================================
+        // SCHEDULE INTERACTIVE SESSION
+        // ==========================================
+        if (current?.type === "schedule") {
+            if (Date.now() > current.expires) {
+                session.delete(jid);
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "schedule_expired")
+                });
+            }
+
+            const answer = body.trim();
+
+            if (current.step === "jid") {
+                if (!answer.endsWith("@g.us")) {
+                    return sock.sendMessage(jid, {
+                        text: t(jid, "schedule_invalid_jid")
+                    });
+                }
+
+                current.data.groupJid = answer;
+                current.step = "message";
+                session.set(jid, current);
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "schedule_step_message")
+                });
+            }
+
+            if (current.step === "message") {
+                if (!answer) {
+                    return sock.sendMessage(jid, {
+                        text: t(jid, "schedule_invalid_message")
+                    });
+                }
+
+                current.data.message = answer;
+                current.step = "datetime";
+                session.set(jid, current);
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "schedule_step_datetime")
+                });
+            }
+
+            if (current.step === "datetime") {
+                const scheduler = require("./lib/scheduler");
+                const runAt = scheduler.parseDateTime(answer);
+
+                if (runAt === null) {
+                    return sock.sendMessage(jid, {
+                        text: t(jid, "schedule_invalid_datetime")
+                    });
+                }
+
+                if (runAt <= Date.now()) {
+                    return sock.sendMessage(jid, {
+                        text: t(jid, "schedule_past_datetime")
+                    });
+                }
+
+                const item = scheduler.add({
+                    groupJid: current.data.groupJid,
+                    message: current.data.message,
+                    runAt
+                });
+
+                session.delete(jid);
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "schedule_created")
+                        .replaceAll("{{id}}", item.id)
+                        .replaceAll(
+                            "{{time}}",
+                            new Date(item.runAt).toLocaleString()
+                        )
+                        .replaceAll("{{group}}", item.groupJid)
+                });
+            }
+
+            session.delete(jid);
+            return;
+        }
 
         // ==========================================
         // MEDIA QUALITY SELECTION

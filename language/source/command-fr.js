@@ -120,5 +120,6 @@ autoreact: "Réagir automatiquement aux messages",
   "warnlist": "Afficher tous les utilisateurs avertis",
   "weather": "Afficher la météo actuelle d'une ville.",
   "welcome": "Activer ou désactiver les messages de bienvenue",
-  "whois": "Afficher les informations de la discussion"
+  "whois": "Afficher les informations de la discussion",
+  "schedule": "🗓️ Planifier un message pour un groupe WhatsApp à une date et une heure précises.",
 };

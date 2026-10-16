@@ -119,6 +119,7 @@ sock.ev.on("messages.upsert", async ({ messages, type }) => {
             const { connection, lastDisconnect } = update;
 
             if (connection === "open") {
+                require("./lib/scheduler").start(sock);
                 
                 const owner =
     sock.user.id.split(":")[0];
