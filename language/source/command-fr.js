@@ -122,4 +122,5 @@ autoreact: "Réagir automatiquement aux messages",
   "welcome": "Activer ou désactiver les messages de bienvenue",
   "whois": "Afficher les informations de la discussion",
   "schedule": "🗓️ Planifier un message pour un groupe WhatsApp à une date et une heure précises.",
+    "groups": "𝗔𝗳𝗳𝗶𝗰𝗵𝗲𝗿 𝘁𝗼𝘂𝘀 𝗹𝗲𝘀 𝗴𝗿𝗼𝘂𝗽𝗲𝘀 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 𝗱𝘂 𝗯𝗼𝘁 𝗮𝘃𝗲𝗰 𝗹𝗲𝘂𝗿𝘀 𝗝𝗜𝗗.",
 };

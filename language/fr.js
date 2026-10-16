@@ -797,4 +797,9 @@ module.exports = {
   "schedule_cancelled": "✅ Le message programmé {{id}} a été annulé.",
   "schedule_not_found": "❌ Aucun message programmé en attente ne correspond à cet ID.",
   "schedule_expired": "⏳ Cette session de planification a expiré. Envoyez .schedule pour recommencer.",
+    "groups_private_only": "🔒 𝗨𝘁𝗶𝗹𝗶𝘀𝗲𝘇 .𝗴𝗿𝗼𝘂𝗽𝘀 𝗱𝗮𝗻𝘀 𝘃𝗼𝘁𝗿𝗲 𝗱𝗶𝘀𝗰𝘂𝘀𝘀𝗶𝗼𝗻 𝗽𝗿𝗶𝘃𝗲́𝗲 𝗮𝘃𝗲𝗰 𝗡𝗘𝗫𝗢𝗥𝗔 𝗽𝗼𝘂𝗿 𝗽𝗿𝗼𝘁𝗲́𝗴𝗲𝗿 𝗹𝗮 𝗹𝗶𝘀𝘁𝗲 𝗱𝗲𝘀 𝗴𝗿𝗼𝘂𝗽𝗲𝘀.",
+    "groups_list_empty": "⚠️ 𝗡𝗘𝗫𝗢𝗥𝗔 𝗻𝗲 𝗽𝗮𝗿𝘁𝗶𝗰𝗶𝗽𝗲 𝗮𝗰𝘁𝘂𝗲𝗹𝗹𝗲𝗺𝗲𝗻𝘁 𝗮̀ 𝗮𝘂𝗰𝘂𝗻 𝗴𝗿𝗼𝘂𝗽𝗲 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽.",
+    "groups_list_header": "╭━━〔 👥 𝗟𝗜𝗦𝗧𝗘 𝗗𝗘𝗦 𝗚𝗥𝗢𝗨𝗣𝗘𝗦 𝗡𝗘𝗫𝗢𝗥𝗔 〕━━╮\n┃ 📊 𝗡𝗼𝗺𝗯𝗿𝗲 𝗱𝗲 𝗴𝗿𝗼𝘂𝗽𝗲𝘀 : {{count}}\n┃ 📄 𝗣𝗮𝗿𝘁𝗶𝗲 {{part}}/{{total}}\n╰━━━━━━━━━━━━━━━━━━━━━━╯",
+    "groups_list_item": "╭─〔 {{number}}. {{name}} 〕\n┃ 🆔 𝗝𝗜𝗗 : {{jid}}\n╰━━━━━━━━━━━━━━━━━━━━",
+    "groups_list_error": "❌ 𝗜𝗺𝗽𝗼𝘀𝘀𝗶𝗯𝗹𝗲 𝗱𝗲 𝗿𝗲́𝗰𝘂𝗽𝗲́𝗿𝗲𝗿 𝗹𝗮 𝗹𝗶𝘀𝘁𝗲 𝗱𝗲𝘀 𝗴𝗿𝗼𝘂𝗽𝗲𝘀. 𝗩𝗲𝘂𝗶𝗹𝗹𝗲𝘇 𝗿𝗲́𝗲𝘀𝘀𝗮𝘆𝗲𝗿.",
 }
