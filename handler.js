@@ -563,6 +563,15 @@ if (cmd !== "menu" && !isOwner && !isSudo) {
         }
     }
 
+    // Record authorized command usage for .cmdstats.
+    if (cmd !== "cmdstats" && cmd !== "commandstats" && cmd !== "commandusage") {
+        try {
+            require("./lib/command-stats").recordCommand(command.name || cmd);
+        } catch (error) {
+            console.error("[CMDSTATS] Tracking failed:", error.message);
+        }
+    }
+
     await command.execute(sock, msg, args);
 }
 

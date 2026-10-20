@@ -63,3 +63,5 @@ Thumbs.db
 
 # Local conversion files
 .lottie-converter/
+*.bak
+*.backup
