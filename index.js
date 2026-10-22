@@ -14,18 +14,28 @@ const botName =
     settings.get("global").bot_name ||
     "NEXORA";
 
+const logStore = require("./lib/logger");
 const originalLog = console.log;
+const originalWarn = console.warn;
+const originalError = console.error;
 
 console.log = (...args) => {
+    const text = args.map(arg => {
+        if (typeof arg === "string") return arg;
+        if (arg instanceof Error) return arg.message;
+        return "";
+    }).join(" ");
 
-    // Hide all object dumps (WhatsApp messages, updates, etc.)
-    if (args.some(arg => typeof arg === "object")) {
+    // Suppress only serialized WhatsApp message dumps.
+    if (
+        /"remoteJid"\s*:/.test(text) &&
+        /"message"\s*:/.test(text) &&
+        /"key"\s*:/.test(text)
+    ) {
         return;
     }
 
-    const text = args.join(" ");
-
-    // Hide old debug logs
+    // Keep noisy debug output and pairing codes out of the log.
     if (
         text.startsWith("COMMAND:") ||
         text.startsWith("ARGS:") ||
@@ -36,9 +46,23 @@ console.log = (...args) => {
         return;
     }
 
-    originalLog(...args);
+    if (!text.includes("PAIR CODE")) {
+        logStore.log(...args);
+    }
 
+    originalLog(...args);
 };
+
+console.warn = (...args) => {
+    logStore.warn(...args);
+    originalWarn(...args);
+};
+
+console.error = (...args) => {
+    logStore.error(...args);
+    originalError(...args);
+};
+
 async function startBot() {
     try {
     

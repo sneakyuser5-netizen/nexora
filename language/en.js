@@ -811,4 +811,15 @@ module.exports = {
     "tools.password_invalid": "❌ *𝗣𝗹𝗲𝗮𝘀𝗲 𝗲𝗻𝘁𝗲𝗿 𝗮 𝘃𝗮𝗹𝗶𝗱 𝗻𝘂𝗺𝗯𝗲𝗿.*",
     "tools.password_range": "❌ *𝗣𝗮𝘀𝘀𝘄𝗼𝗿𝗱 𝗹𝗲𝗻𝗴𝘁𝗵 𝗺𝘂𝘀𝘁 𝗯𝗲 𝟴–𝟲𝟰 𝗰𝗵𝗮𝗿𝗮𝗰𝘁𝗲𝗿𝘀.*",
     "tools.password_secure": "Generated locally using secure randomness.",
+
+    // Hash generator translations
+    "tools.hash_usage": "📌 *𝗨𝘀𝗮𝗴𝗲:*\n.hash <text>\n.hash sha256 <text>\n.hash sha512 <text>",
+    "tools.hash_title": "𝗛𝗔𝗦𝗛 𝗚𝗘𝗡𝗘𝗥𝗔𝗧𝗢𝗥",
+    "tools.hash_too_long": "❌ *𝗧𝗲𝘅𝘁 𝗶𝘀 𝘁𝗼𝗼 𝗹𝗼𝗻𝗴.* Maximum: 10,000 bytes.",
+    "tools.hash_characters": "hexadecimal characters",
+    "tools.hash_note": "Hashing is not encryption.",
+    "owner.logs_title": "╭━━━〔 𝗡𝗘𝗫𝗢𝗥𝗔 𝗕𝗢𝗧 𝗟𝗢𝗚𝗦 〕━━━╮",
+    "owner.logs_usage": "📌 *𝗨𝘀𝗮𝗴𝗲:* .logs [errors] [1-100]\nExamples: .logs | .logs 50 | .logs errors 50",
+    "owner.logs_empty": "╭━━━〔 𝗟𝗢𝗚𝗦 〕━━━╮\n\nNo log entries were found.",
+    "owner.logs_unavailable": "❌ Unable to read the bot logs.",
 }

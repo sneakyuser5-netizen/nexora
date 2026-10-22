@@ -424,7 +424,7 @@ ${t(jid, "owner.afk_return_footer")}`
                     await sock.groupParticipantsUpdate(jid, [member.id], "remove");
                     kicked++;
                 } catch (err) {
-                    console.dir(err, { depth: null });
+                    console.error("KICKALL ERROR:", err.message || "Operation failed");
                     failed++;
                 }
             }

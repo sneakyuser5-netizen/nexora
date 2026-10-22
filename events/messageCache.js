@@ -7,10 +7,6 @@ module.exports = {
 
     execute: async (sock, msg) => {
 
-        console.log(
-            JSON.stringify(msg, null, 2)
-        );
-
         if (!msg.message) return;
 
         const id = msg.key?.id;

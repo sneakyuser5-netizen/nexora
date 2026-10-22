@@ -832,4 +832,15 @@ module.exports = {
     "tools.password_invalid": "❌ *𝗩𝗲𝘂𝗶𝗹𝗹𝗲𝘇 𝗲𝗻𝘁𝗿𝗲𝗿 𝘂𝗻 𝗻𝗼𝗺𝗯𝗿𝗲 𝘃𝗮𝗹𝗶𝗱𝗲.*",
     "tools.password_range": "❌ *𝗟𝗮 𝗹𝗼𝗻𝗴𝘂𝗲𝘂𝗿 𝗱𝗼𝗶𝘁 𝗲̂𝘁𝗿𝗲 𝗲𝗻𝘁𝗿𝗲 𝟴 𝗲𝘁 𝟲𝟰 𝗰𝗮𝗿𝗮𝗰𝘁𝗲̀𝗿𝗲𝘀.*",
     "tools.password_secure": "Généré localement avec un générateur aléatoire sécurisé.",
+
+    // Hash generator translations
+    "tools.hash_usage": "📌 *𝗨𝘁𝗶𝗹𝗶𝘀𝗮𝘁𝗶𝗼𝗻 :*\n.hash <texte>\n.hash sha256 <texte>\n.hash sha512 <texte>",
+    "tools.hash_title": "𝗚𝗘́𝗡𝗘́𝗥𝗔𝗧𝗘𝗨𝗥 𝗗𝗘 𝗛𝗔𝗦𝗛",
+    "tools.hash_too_long": "❌ *𝗧𝗲𝘅𝘁𝗲 𝘁𝗿𝗼𝗽 𝗹𝗼𝗻𝗴.* Maximum : 10 000 octets.",
+    "tools.hash_characters": "caractères hexadécimaux",
+    "tools.hash_note": "Le hachage n'est pas du chiffrement.",
+    "owner.logs_title": "╭━━━〔 𝗝𝗢𝗨𝗥𝗡𝗔𝗨𝗫 𝗗𝗨 𝗕𝗢𝗧 𝗡𝗘𝗫𝗢𝗥𝗔 〕━━━╮",
+    "owner.logs_usage": "📌 *𝗨𝘁𝗶𝗹𝗶𝘀𝗮𝘁𝗶𝗼𝗻 :* .logs [errors] [1-100]\nExemples : .logs | .logs 50 | .logs errors 50",
+    "owner.logs_empty": "╭━━━〔 𝗝𝗢𝗨𝗥𝗡𝗔𝗨𝗫 〕━━━╮\n\nAucune entrée de journal trouvée.",
+    "owner.logs_unavailable": "❌ Impossible de lire les journaux du bot.",
 }
