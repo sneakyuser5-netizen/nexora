@@ -843,4 +843,17 @@ module.exports = {
     "owner.logs_usage": "📌 *𝗨𝘁𝗶𝗹𝗶𝘀𝗮𝘁𝗶𝗼𝗻 :* .logs [errors] [1-100]\nExemples : .logs | .logs 50 | .logs errors 50",
     "owner.logs_empty": "╭━━━〔 𝗝𝗢𝗨𝗥𝗡𝗔𝗨𝗫 〕━━━╮\n\nAucune entrée de journal trouvée.",
     "owner.logs_unavailable": "❌ Impossible de lire les journaux du bot.",
+
+    "owner.resetdb_title": "🗄️ *RÉINITIALISATION DE LA BASE DE DONNÉES NEXORA*",
+    "owner.resetdb_available": "Fichiers réinitialisables :",
+    "owner.resetdb_protected": "Fichiers protégés (réinitialisation interdite) :",
+    "owner.resetdb_list_footer": "Utilisation : .resetdb <fichier> <empty|factory>",
+    "owner.resetdb_usage": "Utilisation : .resetdb list\n.resetdb <fichier> empty\n.resetdb <fichier> factory",
+    "owner.resetdb_confirm": "⚠️ *CONFIRMATION DE RÉINITIALISATION*\n\nFichier : {{file}}\nMode : {{mode}}\n\nUne sauvegarde sera créée avant toute modification d’un fichier existant.\n\nRépondez exactement *CONFIRM RESET* pour continuer, ou *CANCEL* pour annuler.\nCette confirmation expire dans 60 secondes.",
+    "owner.resetdb_expired": "⏳ Confirmation expirée. Aucun changement effectué. Relancez .resetdb.",
+    "owner.resetdb_cancelled": "✅ Réinitialisation annulée. Aucun changement effectué.",
+    "owner.resetdb_success": "✅ *Réinitialisation terminée.*\nFichier : {{file}}\nMode : {{mode}}\nSauvegarde : {{backup}}",
+    "owner.resetdb_no_backup": "Aucun ancien fichier n’existait ; aucune sauvegarde n’était nécessaire.",
+    "owner.resetdb_failed": "❌ Impossible de réinitialiser {{file}}. Une erreur a été détectée."
+
 }

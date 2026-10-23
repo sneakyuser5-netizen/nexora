@@ -822,4 +822,17 @@ module.exports = {
     "owner.logs_usage": "📌 *𝗨𝘀𝗮𝗴𝗲:* .logs [errors] [1-100]\nExamples: .logs | .logs 50 | .logs errors 50",
     "owner.logs_empty": "╭━━━〔 𝗟𝗢𝗚𝗦 〕━━━╮\n\nNo log entries were found.",
     "owner.logs_unavailable": "❌ Unable to read the bot logs.",
+
+    "owner.resetdb_title": "🗄️ *NEXORA DATABASE RESET*",
+    "owner.resetdb_available": "Resettable files:",
+    "owner.resetdb_protected": "Protected files (cannot be reset):",
+    "owner.resetdb_list_footer": "Usage: .resetdb <file> <empty|factory>",
+    "owner.resetdb_usage": "Usage: .resetdb list\n.resetdb <file> empty\n.resetdb <file> factory",
+    "owner.resetdb_confirm": "⚠️ *DATABASE RESET CONFIRMATION*\n\nFile: {{file}}\nMode: {{mode}}\n\nA backup will be created before changing an existing file.\n\nReply exactly *CONFIRM RESET* to proceed, or *CANCEL* to abort.\nThis confirmation expires in 60 seconds.",
+    "owner.resetdb_expired": "⏳ Reset confirmation expired. Nothing was changed. Run .resetdb again.",
+    "owner.resetdb_cancelled": "✅ Database reset cancelled. Nothing was changed.",
+    "owner.resetdb_success": "✅ *Database reset complete.*\nFile: {{file}}\nMode: {{mode}}\nBackup: {{backup}}",
+    "owner.resetdb_no_backup": "No previous file existed; no backup was needed.",
+    "owner.resetdb_failed": "❌ Could not reset {{file}}. The file was not intentionally overwritten after a detected error."
+
 }

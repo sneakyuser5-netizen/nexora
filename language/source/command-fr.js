@@ -129,5 +129,6 @@ autoreact: "Réagir automatiquement aux messages",
     "poll": "📊 𝗖𝗿𝗲́𝗲𝗿 𝘂𝗻 𝘀𝗼𝗻𝗱𝗮𝗴𝗲 𝗻𝗮𝘁𝗶𝗳 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 𝗮𝘃𝗲𝗰 𝗽𝗹𝘂𝘀𝗶𝗲𝘂𝗿𝘀 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.",
     "calc": "🧮 𝗘𝗳𝗳𝗲𝗰𝘁𝘂𝗲𝗿 𝗱𝗲𝘀 𝗰𝗮𝗹𝗰𝘂𝗹𝘀 𝗺𝗮𝘁𝗵𝗲́𝗺𝗮𝘁𝗶𝗾𝘂𝗲𝘀 𝗵𝗼𝗿𝘀 𝗹𝗶𝗴𝗻𝗲.",
     "hash": "🔐 𝗚𝗲́𝗻𝗲́𝗿𝗲𝗿 𝗱𝗲𝘀 𝗲𝗺𝗽𝗿𝗲𝗶𝗻𝘁𝗲𝘀 𝗰𝗿𝘆𝗽𝘁𝗼𝗴𝗿𝗮𝗽𝗵𝗶𝗾𝘂𝗲𝘀 𝗦𝗛𝗔-𝟮𝟱𝟲 𝗲𝘁 𝗦𝗛𝗔-𝟱𝟭𝟮.",
+    "resetdb": "🗄️ Réinitialiser les fichiers de la base de données avec sauvegarde et confirmation.",
     "logs": "📋 𝗔𝗳𝗳𝗶𝗰𝗵𝗲𝗿 𝗹𝗲𝘀 𝗷𝗼𝘂𝗿𝗻𝗮𝘂𝘅 𝗿𝗲́𝗰𝗲𝗻𝘁𝘀 𝗱𝘂 𝗯𝗼𝘁.",
 };

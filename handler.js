@@ -168,7 +168,8 @@ if (
     const validReplies = {
         media_quality: ["1", "2"],
         clear: ["0", "1", "2", "3", "4", "5"],
-        kickall: ["yes", "no"]
+        kickall: ["yes", "no"],
+        resetdb: ["confirm reset", "cancel"]
     };
 
     const allowedReplies =
@@ -245,6 +246,80 @@ ${t(jid, "owner.afk_return_footer")}`
         const current =
             session.get(jid) ||
             session.get(msg.key?.remoteJidAlt);
+
+        // ==========================================
+        // DATABASE RESET CONFIRMATION
+        // ==========================================
+        if (current?.type === "resetdb") {
+            const answer = body.trim().toLowerCase();
+
+            const clearSession = () => {
+                session.delete(jid);
+                if (msg.key?.remoteJidAlt) {
+                    session.delete(msg.key.remoteJidAlt);
+                }
+            };
+
+            if (Date.now() > current.expires) {
+                clearSession();
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "owner.resetdb_expired")
+                });
+            }
+
+            if (answer === "cancel") {
+                clearSession();
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "owner.resetdb_cancelled")
+                });
+            }
+
+            if (answer !== "confirm reset") {
+                return sock.sendMessage(jid, {
+                    text: t(jid, "owner.resetdb_confirm")
+                        .replaceAll("{{file}}", current.file)
+                        .replaceAll("{{mode}}", current.mode)
+                });
+            }
+
+            clearSession();
+
+            try {
+                const resetdb = require("./lib/resetdb");
+                const result = resetdb.reset(current.file, current.mode);
+
+                console.log(
+                    "DATABASE RESET:",
+                    result.filename,
+                    result.mode,
+                    result.backupPath ? "backup created" : "file created"
+                );
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "owner.resetdb_success")
+                        .replaceAll("{{file}}", result.filename)
+                        .replaceAll("{{mode}}", result.mode)
+                        .replaceAll(
+                            "{{backup}}",
+                            result.backupPath
+                                ? result.backupPath.replace(
+                                    process.cwd() + "/",
+                                    ""
+                                )
+                                : t(jid, "owner.resetdb_no_backup")
+                        )
+                });
+            } catch (error) {
+                console.error("DATABASE RESET ERROR:", error.message);
+
+                return sock.sendMessage(jid, {
+                    text: t(jid, "owner.resetdb_failed")
+                        .replaceAll("{{file}}", current.file)
+                });
+            }
+        }
 
         // ==========================================
         // SCHEDULE INTERACTIVE SESSION
