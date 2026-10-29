@@ -65,3 +65,6 @@ Thumbs.db
 .lottie-converter/
 *.bak
 *.backup
+
+# Private Telegram login sessions
+.telegram-auth/

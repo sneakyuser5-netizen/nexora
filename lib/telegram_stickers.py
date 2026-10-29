@@ -35,9 +35,13 @@ from telegram_config import API_ID, API_HASH
 # TELEGRAM SESSION
 # ============================================================
 
-SESSION_NAME = os.path.join(
+TELEGRAM_AUTH_DIR = os.path.join(
     PROJECT_ROOT,
-    "telegram_session"
+    ".telegram-auth"
+)
+SESSION_FILE = os.path.join(
+    TELEGRAM_AUTH_DIR,
+    "session.string"
 )
 
 
@@ -99,36 +103,27 @@ async def download_stickers(
         exist_ok=True
     )
 
-    telegram_session = os.getenv(
-        "TELEGRAM_SESSION",
-        ""
-    ).strip()
-
-    # Use TELEGRAM_SESSION when supplied.
-    # Otherwise use the local telegram_session.session file.
-    if telegram_session:
-        print(
-            "TELEGRAM: using TELEGRAM_SESSION environment session.",
-            flush=True
+    # Use the private session created by the .telegram login command.
+    # Never prompt for login from this background downloader.
+    if not os.path.isfile(SESSION_FILE):
+        raise RuntimeError(
+            "No Telegram account is connected. Use .telegram login <phone> "
+            "in a private chat with the bot first."
         )
 
-        client = TelegramClient(
-            StringSession(telegram_session),
-            API_ID,
-            API_HASH
+    with open(SESSION_FILE, "r", encoding="utf-8") as session_handle:
+        telegram_session = session_handle.read().strip()
+
+    if not telegram_session:
+        raise RuntimeError(
+            "The saved Telegram session is empty. Run .telegram login <phone> again."
         )
 
-    else:
-        print(
-            "TELEGRAM: using telegram_session.session file.",
-            flush=True
-        )
-
-        client = TelegramClient(
-            SESSION_NAME,
-            API_ID,
-            API_HASH
-        )
+    client = TelegramClient(
+        StringSession(telegram_session),
+        API_ID,
+        API_HASH
+    )
 
     print(
         f"TELEGRAM: API ID loaded = {bool(API_ID)}",
@@ -141,12 +136,7 @@ async def download_stickers(
     )
 
     print(
-        f"TELEGRAM: session env exists = {bool(telegram_session)}",
-        flush=True
-    )
-
-    print(
-        f"TELEGRAM: session file exists = {os.path.exists(SESSION_NAME + '.session')}",
+        f"TELEGRAM: saved session file exists = {os.path.isfile(SESSION_FILE)}",
         flush=True
     )
 
@@ -156,7 +146,13 @@ async def download_stickers(
     )
 
     try:
-        await client.start()
+        await client.connect()
+
+        if not await client.is_user_authorized():
+            raise RuntimeError(
+                "The saved Telegram session is not authorized. "
+                "Run .telegram login <phone> again."
+            )
 
         print(
             "TELEGRAM: client started.",
