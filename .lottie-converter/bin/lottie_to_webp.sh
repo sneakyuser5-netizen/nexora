@@ -90,7 +90,7 @@ if ! awk -v fps="$FPS" 'BEGIN { exit !(fps > 0) }'; then
 fi
 
 RENDER_LOG="$TMP_DIR/render.log"
-"$RENDERER" "$JSON" -o "$FRAMES" -w 384 -h 136 -f "$FPS" 2>&1 | tee "$RENDER_LOG"
+"$RENDERER" "$JSON" --output "$FRAMES" --width 384 --height 136 --fps "$FPS" 2>&1 | tee "$RENDER_LOG"
 
 mapfile -t PNG_FILES < <(
     find "$FRAMES" -maxdepth 1 -type f -name 'frame_*.png' | sort
