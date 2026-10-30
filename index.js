@@ -8,7 +8,7 @@ const settings = require("./lib/settings");
 
 
 const setup = require("./lib/setup");
-const BOT_VERSION = "1.0.0";
+const { version: BOT_VERSION } = require("./package.json");
 
 const botName =
     settings.get("global").bot_name ||
@@ -593,4 +593,22 @@ const START_TIME = Date.now();
 global.START_TIME = START_TIME;
 
 
-startBot();
+
+async function boot() {
+    try {
+        if (process.env.TERMUX_VERSION ||
+            process.env.ANDROID_ROOT ||
+            (process.env.PREFIX || "").includes("com.termux")) {
+            console.log("📱 Termux detected: skipping Linux Lottie converter setup.");
+        } else {
+            await require("./scripts/install-lottie-converter")();
+        }
+
+        startBot();
+    } catch (error) {
+        console.error("❌ Startup dependency setup failed:", error.message);
+        process.exit(1);
+    }
+}
+
+boot();

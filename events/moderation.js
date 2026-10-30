@@ -8,6 +8,7 @@ module.exports = {
 
     execute: async (sock, msg) => {
         if (!msg.message) return;
+
         if (msg.key.fromMe) return;
 
         const jid = msg.key.remoteJid;

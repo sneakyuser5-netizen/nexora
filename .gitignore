@@ -38,7 +38,6 @@ telegram_media_test/
 telegram_test/
 
 # Media / temporary files
-media/
 test-audio.mp3
 test-play.mp3
 
@@ -68,3 +67,11 @@ Thumbs.db
 
 # Private Telegram login sessions
 .telegram-auth/
+
+# Local repair backups
+*.before-*
+*.diagbak
+*.pre-repair
+
+# Runtime lock files
+telegram_stickers.lock

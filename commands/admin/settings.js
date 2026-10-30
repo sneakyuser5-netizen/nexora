@@ -43,6 +43,7 @@ const antiLinkDisplay = group.antilink
             group.adminonly,
             group.lock_image,
             group.antilink,
+            group.antigm,
             group.aifilter,
             group.ai,
             group.autoreact,
@@ -64,6 +65,8 @@ const antiLinkDisplay = group.antilink
 
 🔒 ${t(jid, "admin.settings_adminonly_label")} : ${status(group.adminonly)}
 🔗 ${t(jid, "admin.settings_antilink_label")} : ${antiLinkDisplay}
+🛡️ ${t(jid, "admin.settings_antigm_label")} : ${status(group.antigm)}
+⚙️ ${t(jid, "admin.settings_antigm_action_label")} : ${(group.antigm_action || "warn").toUpperCase()}
 🖼️ ${t(jid, "admin.settings_imagelock_label")} : ${status(group.lock_image)}
 🤖 ${t(jid, "admin.settings_aifilter_label")} : ${status(group.aifilter)}
 

@@ -1,193 +1,160 @@
 const fs = require("fs");
-const path = require("path");
 const https = require("https");
+const path = require("path");
+const os = require("os");
 const { execFileSync } = require("child_process");
 
 const ROOT = path.resolve(__dirname, "..");
 const INSTALL_DIR = path.join(ROOT, ".lottie-converter");
-const ZIP_PATH = path.join(ROOT, ".lottie-converter.zip");
+const BIN_DIR = path.join(INSTALL_DIR, "bin");
+const WEBP_SCRIPT = path.join(BIN_DIR, "lottie_to_webp.sh");
+const RENDERER = path.join(BIN_DIR, "lottie_to_png");
 
 const VERSION = "v1.2.0";
 
-const CUSTOM_WEBP_SCRIPT = path.join(
-    ROOT,
-    "scripts",
-    "lottie_to_webp.sh"
-);
-
-const INSTALLED_WEBP_SCRIPT = path.join(
-    INSTALL_DIR,
-    "bin",
-    "lottie_to_webp.sh"
-);
-
 function detectAsset() {
-    switch (process.arch) {
-        case "x64":
-            return "lottie-converter.linux.amd64.zip";
-
-        case "arm64":
-            return "lottie-converter.linux.arm64.zip";
-
-        default:
-            throw new Error(
-                `Unsupported CPU architecture: ${process.arch}`
-            );
-    }
-}
-
-function installCustomWebpScript() {
-    if (!fs.existsSync(CUSTOM_WEBP_SCRIPT)) {
-        throw new Error(
-            `Custom WebP converter script not found: ${CUSTOM_WEBP_SCRIPT}`
-        );
+    if (
+        process.env.TERMUX_VERSION ||
+        process.env.ANDROID_ROOT ||
+        (process.env.PREFIX || "").includes("com.termux")
+    ) {
+        throw new Error("Linux converter installation is not supported in Termux.");
     }
 
-    fs.mkdirSync(
-        path.dirname(INSTALLED_WEBP_SCRIPT),
-        {
-            recursive: true
-        }
-    );
+    if (os.platform() !== "linux") {
+        throw new Error(`Unsupported platform: ${os.platform()}`);
+    }
 
-    fs.copyFileSync(
-        CUSTOM_WEBP_SCRIPT,
-        INSTALLED_WEBP_SCRIPT
-    );
+    const assets = {
+        x64: "lottie-converter.linux.amd64.zip",
+        arm64: "lottie-converter.linux.arm64.zip"
+    };
 
-    fs.chmodSync(
-        INSTALLED_WEBP_SCRIPT,
-        0o755
-    );
+    const asset = assets[os.arch()];
 
-    console.log(
-        "Custom Lottie WebP converter installed."
-    );
+    if (!asset) {
+        throw new Error(`Unsupported architecture: ${os.arch()}`);
+    }
+
+    return asset;
 }
 
-function download(url, destination) {
+function download(url, destination, redirects = 5) {
     return new Promise((resolve, reject) => {
-        const file = fs.createWriteStream(destination);
+        const request = https.get(url, response => {
+            if ([301, 302, 303, 307, 308].includes(response.statusCode)) {
+                response.resume();
 
-        https.get(url, response => {
-            if (
-                response.statusCode >= 300 &&
-                response.statusCode < 400 &&
-                response.headers.location
-            ) {
-                file.close();
-                fs.unlinkSync(destination);
+                if (!response.headers.location || redirects <= 0) {
+                    reject(new Error("Invalid or excessive download redirects."));
+                    return;
+                }
 
-                return download(
-                    response.headers.location,
-                    destination
-                ).then(resolve).catch(reject);
-            }
-
-            if (response.statusCode !== 200) {
-                file.close();
-                fs.unlinkSync(destination);
-
-                reject(
-                    new Error(
-                        `Download failed: HTTP ${response.statusCode}`
-                    )
-                );
+                download(
+                    new URL(response.headers.location, url).toString(),
+                    destination,
+                    redirects - 1
+                ).then(resolve, reject);
 
                 return;
             }
 
-            response.pipe(file);
-
-            file.on("finish", () => {
-                file.close(resolve);
-            });
-        }).on("error", error => {
-            file.close();
-
-            if (fs.existsSync(destination)) {
-                fs.unlinkSync(destination);
+            if (response.statusCode !== 200) {
+                response.resume();
+                reject(new Error(`Download failed: HTTP ${response.statusCode}`));
+                return;
             }
 
-            reject(error);
+            const output = fs.createWriteStream(destination);
+
+            output.on("error", reject);
+            response.on("error", reject);
+            output.on("finish", () => output.close(resolve));
+
+            response.pipe(output);
         });
+
+        request.on("error", reject);
     });
+}
+
+function verifyInstallation() {
+    for (const file of [WEBP_SCRIPT, RENDERER]) {
+        if (!fs.existsSync(file)) {
+            throw new Error(`Missing official converter file: ${file}`);
+        }
+
+        fs.chmodSync(file, 0o755);
+    }
+
+    const firstLine = fs.readFileSync(WEBP_SCRIPT, "utf8").split(/\r?\n/, 1)[0];
+
+    if (firstLine.includes("/data/data/com.termux")) {
+        throw new Error("Termux-specific converter script detected.");
+    }
+
+    try {
+        execFileSync("sh", [
+            "-c",
+            "command -v img2webp >/dev/null 2>&1"
+        ]);
+    } catch {
+        throw new Error("img2webp is missing from the server PATH.");
+    }
+
+    console.log("Official Linux Lottie converter verified.");
 }
 
 async function main() {
     const asset = detectAsset();
 
-    const executable = path.join(
-        INSTALL_DIR,
-        "bin",
-        "lottie_to_png"
-    );
+    fs.mkdirSync(BIN_DIR, { recursive: true });
 
-    if (fs.existsSync(executable)) {
-        console.log(
-            `Lottie converter already installed for ${process.arch}.`
-        );
+    let valid = false;
 
-        installCustomWebpScript();
-
-        return;
+    if (fs.existsSync(WEBP_SCRIPT) && fs.existsSync(RENDERER)) {
+        try {
+            verifyInstallation();
+            valid = true;
+        } catch (error) {
+            console.log(`Existing installation needs repair: ${error.message}`);
+        }
     }
 
+    if (valid) return;
+
+    const archive = path.join(INSTALL_DIR, asset);
     const url =
-        `https://github.com/ed-asriyan/lottie-converter/releases/download/${VERSION}/${asset}`;
+        `https://github.com/ed-asriyan/lottie-converter/releases/download/` +
+        `${VERSION}/${asset}`;
 
-    console.log(
-        `Installing Lottie converter ${VERSION} (${process.arch})...`
-    );
+    try {
+        console.log(`Downloading official Linux converter: ${asset}`);
 
-    fs.mkdirSync(
-        INSTALL_DIR,
-        {
-            recursive: true
-        }
-    );
+        await download(url, archive);
 
-    await download(
-        url,
-        ZIP_PATH
-    );
-
-    console.log(
-        "Lottie converter archive downloaded."
-    );
-
-    execFileSync(
-        "unzip",
-        [
+        execFileSync("unzip", [
             "-o",
-            ZIP_PATH,
+            archive,
             "-d",
             INSTALL_DIR
-        ],
-        {
-            stdio: "inherit"
+        ], { stdio: "inherit" });
+
+        verifyInstallation();
+
+        console.log("Lottie converter installation completed.");
+    } finally {
+        if (fs.existsSync(archive)) {
+            fs.unlinkSync(archive);
         }
-    );
-
-    fs.chmodSync(
-        executable,
-        0o755
-    );
-
-    installCustomWebpScript();
-
-    fs.unlinkSync(ZIP_PATH);
-
-    console.log(
-        `Lottie converter installed successfully: ${executable}`
-    );
+    }
 }
 
-main().catch(error => {
-    console.error(
-        "Lottie converter installation failed:",
-        error.message
-    );
+module.exports = main;
 
-    process.exit(1);
-});
+if (require.main === module) {
+    main().catch(error => {
+        console.error(`Lottie converter setup failed: ${error.message}`);
+        process.exitCode = 1;
+    });
+}

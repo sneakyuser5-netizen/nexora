@@ -60,7 +60,7 @@ module.exports = {
 
 ⏱ ${t("general.stats_uptime")}: ${hours}h ${minutes}m ${seconds}s
 
-📦 ${t("general.stats_version")}: 1.0.0`
+📦 ${t("general.stats_version")}: ${require("../../package.json").version}`
         });
 
     }
