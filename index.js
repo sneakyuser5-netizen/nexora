@@ -601,6 +601,7 @@ async function boot() {
             (process.env.PREFIX || "").includes("com.termux")) {
             console.log("📱 Termux detected: skipping Linux Lottie converter setup.");
         } else {
+            await require("./scripts/install-python-deps")();
             await require("./scripts/install-lottie-converter")();
         }
 

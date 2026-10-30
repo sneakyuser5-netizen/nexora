@@ -88,8 +88,12 @@ async function main() {
     console.log("Python dependencies installed successfully.");
 }
 
-main().catch(error => {
-    console.error("Python dependency installation failed:");
-    console.error(error);
-    process.exit(1);
-});
+if (require.main === module) {
+    main().catch(error => {
+        console.error("Python dependency installation failed:");
+        console.error(error);
+        process.exit(1);
+    });
+} else {
+    module.exports = main;
+}
