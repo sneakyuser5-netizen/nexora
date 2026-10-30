@@ -1,14 +1,19 @@
+const fs = require("fs");
 const { spawn } = require("child_process");
 const path = require("path");
 const { t } = require("../../lib/lang");
 
 function runAuth(action, value = "") {
     return new Promise((resolve) => {
-        const script = path.join(__dirname, "../../lib/telegram_auth.py");
-        const python = process.env.PYTHON || "python3";
+        const rootDir = path.resolve(__dirname, "../..");
+        const script = path.join(rootDir, "lib", "telegram_auth.py");
+        const venvPython = path.join(rootDir, ".venv", "bin", "python");
+        const python = fs.existsSync(venvPython)
+            ? venvPython
+            : (process.env.PYTHON || "python3");
 
         const child = spawn(python, [script], {
-            cwd: process.cwd(),
+            cwd: rootDir,
             stdio: ["pipe", "pipe", "ignore"],
             env: { ...process.env, PYTHONUNBUFFERED: "1" }
         });

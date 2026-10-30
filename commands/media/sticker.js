@@ -91,7 +91,7 @@ module.exports = {
 
             const pythonCommand = fs.existsSync(venvPython)
                 ? venvPython
-                : "python3";
+                : (process.env.PYTHON || "python3");
 
             console.log(
                 `🐍 TELEGRAM STICKER: Python = ${pythonCommand}`
