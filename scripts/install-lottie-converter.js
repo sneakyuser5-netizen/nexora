@@ -3,6 +3,7 @@ const https = require("https");
 const path = require("path");
 const os = require("os");
 const { execFileSync } = require("child_process");
+const extract = require("extract-zip");
 
 const ROOT = path.resolve(__dirname, "..");
 const INSTALL_DIR = path.join(ROOT, ".lottie-converter");
@@ -133,12 +134,7 @@ async function main() {
 
         await download(url, archive);
 
-        execFileSync("unzip", [
-            "-o",
-            archive,
-            "-d",
-            INSTALL_DIR
-        ], { stdio: "inherit" });
+        await extract(archive, { dir: INSTALL_DIR });
 
         verifyInstallation();
 
