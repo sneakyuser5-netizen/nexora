@@ -49,10 +49,18 @@ if ! command -v "$FFMPEG" >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! "$FFMPEG" -hide_banner -encoders 2>/dev/null | grep -q 'libwebp_anim'; then
-    echo "FFmpeg does not support the libwebp_anim encoder." >&2
+WEBP_ENCODERS="$("$FFMPEG" -hide_banner -encoders 2>/dev/null)"
+
+if grep -q 'libwebp_anim' <<< "$WEBP_ENCODERS"; then
+    WEBP_ENCODER="libwebp_anim"
+elif grep -q 'libwebp' <<< "$WEBP_ENCODERS"; then
+    WEBP_ENCODER="libwebp"
+else
+    echo "FFmpeg has no supported WebP encoder." >&2
     exit 1
 fi
+
+echo "Using FFmpeg encoder: $WEBP_ENCODER"
 
 TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/nexora-sticker.XXXXXX")"
 
@@ -102,7 +110,7 @@ INPUT_RATE="$FPS"
     -framerate "$INPUT_RATE" \
     -i "$FRAMES/frame_%05d.png" \
     -an \
-    -c:v libwebp_anim \
+    -c:v "$WEBP_ENCODER" \
     -lossless 0 \
     -quality 80 \
     -compression_level 0 \
