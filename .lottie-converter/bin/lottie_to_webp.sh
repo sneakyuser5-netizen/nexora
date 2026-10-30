@@ -84,7 +84,7 @@ mkdir -p "$FRAMES"
 
 RENDER_LOG="$TMP_DIR/render.log"
 
-"$RENDERER" "$JSON" "$FRAMES" 384 136 | tee "$RENDER_LOG"
+"$RENDERER" "$JSON" -o "$FRAMES" -w 384 -h 136 | tee "$RENDER_LOG"
 
 FPS="$(sed -n 's/.* at \([0-9.]*\) FPS.*/\1/p' "$RENDER_LOG")"
 
