@@ -82,16 +82,15 @@ fi
 FRAMES="$TMP_DIR/frames"
 mkdir -p "$FRAMES"
 
-RENDER_LOG="$TMP_DIR/render.log"
+FPS="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["fr"])' "$JSON")"
 
-"$RENDERER" "$JSON" -o "$FRAMES" -w 384 -h 136 | tee "$RENDER_LOG"
-
-FPS="$(sed -n 's/.* at \([0-9.]*\) FPS.*/\1/p' "$RENDER_LOG")"
-
-if [[ -z "$FPS" ]] || ! awk -v fps="$FPS" 'BEGIN { exit !(fps > 0) }'; then
-    echo "Could not determine animation frame rate." >&2
+if ! awk -v fps="$FPS" 'BEGIN { exit !(fps > 0) }'; then
+    echo "Invalid animation frame rate: $FPS" >&2
     exit 1
 fi
+
+RENDER_LOG="$TMP_DIR/render.log"
+"$RENDERER" "$JSON" -o "$FRAMES" -w 384 -h 136 -f "$FPS" 2>&1 | tee "$RENDER_LOG"
 
 mapfile -t PNG_FILES < <(
     find "$FRAMES" -maxdepth 1 -type f -name 'frame_*.png' | sort
