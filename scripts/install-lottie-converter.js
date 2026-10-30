@@ -88,6 +88,18 @@ function verifyInstallation() {
         fs.chmodSync(file, 0o755);
     }
 
+    const binary = fs.readFileSync(RENDERER);
+    const expectedMachine = os.arch() === "x64" ? 62 :
+        os.arch() === "arm64" ? 183 : null;
+
+    if (
+        binary.length < 20 ||
+        binary.subarray(0, 4).toString("hex") !== "7f454c46" ||
+        binary.readUInt16LE(18) !== expectedMachine
+    ) {
+        throw new Error(`Renderer architecture mismatch. Expected ${os.arch()}.`);
+    }
+
     const firstLine = fs.readFileSync(WEBP_SCRIPT, "utf8").split(/\r?\n/, 1)[0];
 
     if (firstLine.includes("/data/data/com.termux")) {
@@ -95,12 +107,15 @@ function verifyInstallation() {
     }
 
     try {
-        execFileSync("sh", [
-            "-c",
-            "command -v img2webp >/dev/null 2>&1"
-        ]);
-    } catch {
-        throw new Error("img2webp is missing from the server PATH.");
+        const encoders = execFileSync("ffmpeg", [
+            "-hide_banner", "-encoders"
+        ], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+
+        if (!encoders.includes("libwebp_anim")) {
+            throw new Error("FFmpeg lacks the libwebp_anim encoder.");
+        }
+    } catch (error) {
+        throw new Error(`FFmpeg animated WebP support unavailable: ${error.message}`);
     }
 
     console.log("Official Linux Lottie converter verified.");
@@ -129,12 +144,27 @@ async function main() {
         `https://github.com/ed-asriyan/lottie-converter/releases/download/` +
         `${VERSION}/${asset}`;
 
+    const stagingDir = fs.mkdtempSync(
+        path.join(os.tmpdir(), "nexora-lottie-")
+    );
+
     try {
         console.log(`Downloading official Linux converter: ${asset}`);
 
         await download(url, archive);
 
-        await extract(archive, { dir: INSTALL_DIR });
+        await extract(archive, { dir: stagingDir });
+
+        const downloadedRenderer = path.join(
+            stagingDir, "bin", "lottie_to_png"
+        );
+
+        if (!fs.existsSync(downloadedRenderer)) {
+            throw new Error("Official archive does not contain bin/lottie_to_png.");
+        }
+
+        fs.copyFileSync(downloadedRenderer, RENDERER);
+        fs.chmodSync(RENDERER, 0o755);
 
         verifyInstallation();
 
@@ -143,6 +173,8 @@ async function main() {
         if (fs.existsSync(archive)) {
             fs.unlinkSync(archive);
         }
+
+        fs.rmSync(stagingDir, { recursive: true, force: true });
     }
 }
 

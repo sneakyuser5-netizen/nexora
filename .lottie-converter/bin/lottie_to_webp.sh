@@ -1,9 +1,15 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-RENDERER="$ROOT_DIR/scripts/native/lottie_to_png"
+if [[ -n "${TERMUX_VERSION:-}" ||
+      -n "${ANDROID_ROOT:-}" ||
+      "${PREFIX:-}" == *com.termux* ]]; then
+    RENDERER="$ROOT_DIR/scripts/native/lottie_to_png"
+else
+    RENDERER="$SCRIPT_DIR/lottie_to_png"
+fi
 
 OUTPUT=""
 INPUT=""
@@ -36,20 +42,30 @@ if [[ ! -f "$INPUT" ]]; then
     exit 1
 fi
 
-if ! command -v img2webp >/dev/null 2>&1; then
-    echo "img2webp is not installed." >&2
+FFMPEG="${FFMPEG:-ffmpeg}"
+
+if ! command -v "$FFMPEG" >/dev/null 2>&1; then
+    echo "FFmpeg is not installed or unavailable in PATH." >&2
+    exit 1
+fi
+
+if ! "$FFMPEG" -hide_banner -encoders 2>/dev/null | grep -q 'libwebp_anim'; then
+    echo "FFmpeg does not support the libwebp_anim encoder." >&2
     exit 1
 fi
 
 TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/nexora-sticker.XXXXXX")"
+
 cleanup() {
     rm -rf "$TMP_DIR"
 }
+
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
 JSON="$INPUT"
+
 if [[ "$INPUT" == *.tgs ]]; then
     JSON="$TMP_DIR/animation.json"
     gzip -dc "$INPUT" > "$JSON"
@@ -58,9 +74,20 @@ fi
 FRAMES="$TMP_DIR/frames"
 mkdir -p "$FRAMES"
 
-"$RENDERER" "$JSON" "$FRAMES" 384 136
+RENDER_LOG="$TMP_DIR/render.log"
 
-mapfile -t PNG_FILES < <(find "$FRAMES" -maxdepth 1 -type f -name 'frame_*.png' | sort)
+"$RENDERER" "$JSON" "$FRAMES" 384 136 | tee "$RENDER_LOG"
+
+FPS="$(sed -n 's/.* at \([0-9.]*\) FPS.*/\1/p' "$RENDER_LOG")"
+
+if [[ -z "$FPS" ]] || ! awk -v fps="$FPS" 'BEGIN { exit !(fps > 0) }'; then
+    echo "Could not determine animation frame rate." >&2
+    exit 1
+fi
+
+mapfile -t PNG_FILES < <(
+    find "$FRAMES" -maxdepth 1 -type f -name 'frame_*.png' | sort
+)
 
 if ((${#PNG_FILES[@]} == 0)); then
     echo "Renderer produced no PNG frames." >&2
@@ -69,8 +96,19 @@ fi
 
 mkdir -p "$(dirname "$OUTPUT")"
 
-DELAY=22
-img2webp -loop 0 -lossy -d "$DELAY" -q 80 -m 0 "${PNG_FILES[@]}" -o "$OUTPUT"
+INPUT_RATE="$FPS"
+
+"$FFMPEG" -hide_banner -loglevel error -y \
+    -framerate "$INPUT_RATE" \
+    -i "$FRAMES/frame_%05d.png" \
+    -an \
+    -c:v libwebp_anim \
+    -lossless 0 \
+    -quality 80 \
+    -compression_level 0 \
+    -loop 0 \
+    -vsync 0 \
+    "$OUTPUT"
 
 if [[ ! -s "$OUTPUT" ]]; then
     echo "WebP conversion produced an empty output file." >&2
