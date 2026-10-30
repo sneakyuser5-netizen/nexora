@@ -6,7 +6,7 @@ module.exports = {
 "img": "Générer une image à partir d’un texte",
 "robot": "Lire un texte cité avec une voix robotique",
 "hacker": "Générer une image de style hacker à partir d’un texte",
-
+"telegram": "𝗖𝗼𝗻𝗻𝗲𝗰𝘁𝗲𝗿 𝗲𝘁 𝗴𝗲́𝗿𝗲𝗿 𝗹𝗲 𝗰𝗼𝗺𝗽𝘁𝗲 𝗧𝗲𝗹𝗲𝗴𝗿𝗮𝗺 𝗽𝗼𝘂𝗿 𝗹𝗮 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝗲 .sticker",
     "aifilter": 'Active ou désactive le filtre de messages par IA.',
     "autogoodnight": 'Active ou désactive les réponses automatiques de bonne nuit.',
 autoreact: "Réagir automatiquement aux messages",
@@ -131,4 +131,5 @@ autoreact: "Réagir automatiquement aux messages",
     "hash": "🔐 𝗚𝗲́𝗻𝗲́𝗿𝗲𝗿 𝗱𝗲𝘀 𝗲𝗺𝗽𝗿𝗲𝗶𝗻𝘁𝗲𝘀 𝗰𝗿𝘆𝗽𝘁𝗼𝗴𝗿𝗮𝗽𝗵𝗶𝗾𝘂𝗲𝘀 𝗦𝗛𝗔-𝟮𝟱𝟲 𝗲𝘁 𝗦𝗛𝗔-𝟱𝟭𝟮.",
     "resetdb": "🗄️ Réinitialiser les fichiers de la base de données avec sauvegarde et confirmation.",
     "logs": "📋 𝗔𝗳𝗳𝗶𝗰𝗵𝗲𝗿 𝗹𝗲𝘀 𝗷𝗼𝘂𝗿𝗻𝗮𝘂𝘅 𝗿𝗲́𝗰𝗲𝗻𝘁𝘀 𝗱𝘂 𝗯𝗼𝘁.",
+  "gstatus": "Publier un statut natif de groupe avec du texte, une image ou une vidéo",
 };
