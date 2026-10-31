@@ -391,9 +391,9 @@ module.exports = {
 
 
   "admin.gstatus_failed": "❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙥𝙤𝙨𝙩 𝙨𝙩𝙖𝙩𝙪𝙨.*",
-  "admin.gstatus_only_supported": "❌ *𝙊𝙣𝙡𝙮 𝙥𝙝𝙤𝙩𝙤𝙨 𝙖𝙣𝙙 𝙫𝙞𝙙𝙚𝙤𝙨 𝙖𝙧𝙚 𝙨𝙪𝙥𝙥𝙤𝙧𝙩𝙚𝙙.*",
-  "admin.gstatus_posted": "✅ *𝙋𝙤𝙨𝙩𝙚𝙙 𝙩𝙤 𝙒𝙝𝙖𝙩𝙨𝘼𝙥𝙥 𝙨𝙩𝙖𝙩𝙪𝙨.*",
-  "admin.gstatus_reply_media": "❌ *𝙍𝙚𝙥𝙡𝙮 𝙩𝙤 𝙖 𝙥𝙝𝙤𝙩𝙤 𝙤𝙧 𝙫𝙞𝙙𝙚𝙤 𝙩𝙤 𝙥𝙤𝙨𝙩 𝙞𝙩 𝙖𝙨 𝙨𝙩𝙖𝙩𝙪𝙨.*",
+  "admin.gstatus_only_supported": "❌ *Only text, photos and videos are supported.*",
+"admin.gstatus_posted": "✅ *Status successfully posted to {{group}}.*",
+  "admin.gstatus_reply_media": "❌ Reply to a text, photo or video before using this command.",
   "admin.hidetag_default": "ℹ️ Use this command with the required information.",
 
   "admin.kick_failed": "❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙧𝙚𝙢𝙤𝙫𝙚 𝙪𝙨𝙚𝙧.*\nMake sure I am an admin.",
@@ -891,6 +891,6 @@ module.exports = {
     "admin.settings_antigm_label": "Anti-Group-Mention",
     "admin.settings_antigm_action_label": "Anti-Group-Mention Action",
   "admin.gstatus_group_only": "❌ Use .gstatus inside the group where you want to publish the status.",
-  "admin.gstatus_admin_only": "❌ Only group administrators can publish a group status.",
-  "admin.gstatus_usage": "Usage: .gstatus Your text — or reply to a text, image, or video with .gstatus.",
+  "admin.gstatus_admin_only": "❌ You must be an administrator of the destination group.",
+  "admin.gstatus_usage": "📌 Usage: Reply to a text, image or video with:\n.gstatus <group-jid>\n\nExample:\n.gstatus 120363412101647856@g.us",
 }

@@ -391,9 +391,9 @@ module.exports = {
 
 
   "admin.gstatus_failed": "❌ *É𝙘𝙝𝙚𝙘 𝙙𝙚 𝙡𝙖 𝙥𝙪𝙗𝙡𝙞𝙘𝙖𝙩𝙞𝙤𝙣 𝙙𝙪 𝙨𝙩𝙖𝙩𝙪𝙩.*",
-  "admin.gstatus_only_supported": "❌ *𝙎𝙚𝙪𝙡𝙚𝙨 𝙡𝙚𝙨 𝙥𝙝𝙤𝙩𝙤𝙨 𝙚𝙩 𝙫𝙞𝙙é𝙤𝙨 𝙨𝙤𝙣𝙩 𝙥𝙧𝙞𝙨𝙚𝙨 𝙚𝙣 𝙘𝙝𝙖𝙧𝙜𝙚.*",
-  "admin.gstatus_posted": "✅ *𝙋𝙪𝙗𝙡𝙞é 𝙙𝙖𝙣𝙨 𝙡𝙚 𝙨𝙩𝙖𝙩𝙪𝙩 𝙒𝙝𝙖𝙩𝙨𝘼𝙥𝙥.*",
-  "admin.gstatus_reply_media": "❌ *𝙍é𝙥𝙤𝙣𝙙𝙚𝙯 à 𝙪𝙣𝙚 𝙥𝙝𝙤𝙩𝙤 𝙤𝙪 𝙫𝙞𝙙é𝙤 𝙥𝙤𝙪𝙧 𝙡𝙖 𝙥𝙪𝙗𝙡𝙞𝙚𝙧 𝙚𝙣 𝙨𝙩𝙖𝙩𝙪𝙩.*",
+  "admin.gstatus_only_supported": "❌ *Seuls les textes, photos et vidéos sont pris en charge.*",
+"admin.gstatus_posted": "✅ *Statut publié avec succès dans {{group}}.*",
+  "admin.gstatus_reply_media": "❌ Répondez à un texte, une photo ou une vidéo avant d’utiliser cette commande.",
   "admin.hidetag_default": "ℹ️ Utilisez cette commande avec les informations requises.",
 
   "admin.kick_failed": "❌ *É𝙘𝙝𝙚𝙘 𝙙𝙚 𝙡𝙖 𝙨𝙪𝙥𝙥𝙧𝙚𝙨𝙨𝙞𝙤𝙣.*\nAssurez-vous que je suis admin.",
@@ -912,6 +912,6 @@ module.exports = {
     "admin.settings_antigm_label": "Protection contre les mentions de groupe",
     "admin.settings_antigm_action_label": "Action de protection contre les mentions de groupe",
   "admin.gstatus_group_only": "❌ Utilisez .gstatus dans le groupe où vous souhaitez publier le statut.",
-  "admin.gstatus_admin_only": "❌ Seuls les administrateurs du groupe peuvent publier un statut de groupe.",
-  "admin.gstatus_usage": "Utilisation : .gstatus Votre texte — ou répondez à un texte, une image ou une vidéo avec .gstatus.",
+  "admin.gstatus_admin_only": "❌ Vous devez être administrateur du groupe de destination.",
+  "admin.gstatus_usage": "📌 Utilisation : Répondez à un texte, une image ou une vidéo avec :\n.gstatus <group-jid>\n\nExemple :\n.gstatus 120363412101647856@g.us",
 }
