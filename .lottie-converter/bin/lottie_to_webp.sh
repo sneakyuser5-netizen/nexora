@@ -93,7 +93,8 @@ RENDER_LOG="$TMP_DIR/render.log"
 "$RENDERER" "$JSON" --output "$FRAMES" --width 384 --height 136 --fps "$FPS" 2>&1 | tee "$RENDER_LOG"
 
 mapfile -t PNG_FILES < <(
-    find "$FRAMES" -maxdepth 1 -type f -name 'frame_*.png' | sort
+    find "$FRAMES" -maxdepth 1 -type f -name '*.png' |
+    sort -V
 )
 
 if ((${#PNG_FILES[@]} == 0)); then
@@ -111,7 +112,7 @@ INPUT_RATE="$FPS"
 
 "$FFMPEG" -hide_banner -loglevel error -y \
     -framerate "$INPUT_RATE" \
-    -i "$FRAMES/frame_%05d.png" \
+    -pattern_type glob -i "$FRAMES/*.png" \
     -an \
     -c:v "$WEBP_ENCODER" \
     -lossless 0 \
