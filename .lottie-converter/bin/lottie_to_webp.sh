@@ -97,7 +97,11 @@ mapfile -t PNG_FILES < <(
 )
 
 if ((${#PNG_FILES[@]} == 0)); then
-    echo "Renderer produced no PNG frames." >&2
+    echo "Renderer produced no matching PNG frames." >&2
+    echo "Actual renderer output:" >&2
+    find "$FRAMES" -maxdepth 2 -type f -printf '%P\n' >&2
+    echo "Renderer output directory contents:" >&2
+    ls -la "$FRAMES" >&2
     exit 1
 fi
 
