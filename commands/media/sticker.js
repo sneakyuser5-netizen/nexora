@@ -466,6 +466,25 @@ module.exports = {
             // SEND STICKERS
             // ==========================================
 
+            // Wait for the current WhatsApp socket, including reconnects.
+            const waitForActiveSocket = async (timeout = 30000) => {
+                const started = Date.now();
+
+                while (Date.now() - started < timeout) {
+                    const activeSock = global.sock;
+
+                    if (activeSock && global.sockReady === true) {
+                        return activeSock;
+                    }
+
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
+                throw new Error(
+                    "WhatsApp connection did not become ready in time."
+                );
+            };
+
             let sent = 0;
 
             for (const file of stickerFiles) {
@@ -479,7 +498,9 @@ module.exports = {
                 }
 
                 try {
-                    await sock.sendMessage(jid, {
+                    const activeSock = await waitForActiveSocket();
+
+                    await activeSock.sendMessage(jid, {
                         sticker: {
                             url: stickerFile
                         }
@@ -492,13 +513,16 @@ module.exports = {
                     );
 
                     await new Promise(resolve =>
-                        setTimeout(resolve, 200)
+                        setTimeout(resolve, 500)
                     );
                 } catch (err) {
                     console.error(
                         `WHATSAPP STICKER ${file} ERROR:`,
                         err.message
                     );
+
+                    // Do not continue sending through a broken connection.
+                    throw err;
                 }
             }
 
@@ -520,7 +544,9 @@ module.exports = {
             // SUCCESS
             // ==========================================
 
-            await sock.sendMessage(jid, {
+            const activeSock = await waitForActiveSocket();
+
+            await activeSock.sendMessage(jid, {
                 text: t(jid, "sticker_success")
                     .replace(
                         "{{count}}",
@@ -534,9 +560,24 @@ module.exports = {
                 err
             );
 
-            await sock.sendMessage(jid, {
-                text: t(jid, "sticker_failed")
-            });
+            try {
+                const activeSock = global.sock;
+
+                if (activeSock && global.sockReady === true) {
+                    await activeSock.sendMessage(jid, {
+                        text: t(jid, "sticker_failed")
+                    });
+                } else {
+                    console.log(
+                        "STICKER FAILURE NOTICE SKIPPED: WhatsApp is disconnected."
+                    );
+                }
+            } catch (notifyError) {
+                console.error(
+                    "STICKER FAILURE NOTIFICATION ERROR:",
+                    notifyError.message
+                );
+            }
 
         } finally {
             // ==========================================

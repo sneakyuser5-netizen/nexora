@@ -74,6 +74,7 @@ async function startBot() {
             logger: pino({ level: "silent" })
         });
         global.sock = sock;
+        global.sockReady = false;
 
 const originalSendMessage = sock.sendMessage.bind(sock);
 
@@ -82,14 +83,15 @@ sock.sendMessage = async (jid, content, options) => {
     try {
 
         const config = settings.get("global");
+        const isSticker = Boolean(content?.sticker);
 
-        if (config.autotyping) {
+        if (!isSticker && config.autotyping) {
 
             await sock.sendPresenceUpdate("composing", jid);
             await new Promise(resolve => setTimeout(resolve, 5000));
             await sock.sendPresenceUpdate("available", jid);
 
-        } else if (config.autorecording) {
+        } else if (!isSticker && config.autorecording) {
 
             await sock.sendPresenceUpdate("recording", jid);
             await new Promise(resolve => setTimeout(resolve, 5000));
@@ -143,6 +145,8 @@ sock.ev.on("messages.upsert", async ({ messages, type }) => {
             const { connection, lastDisconnect } = update;
 
             if (connection === "open") {
+                if (global.sock === sock) global.sockReady = true;
+
                 require("./lib/scheduler").start(sock);
                 
                 const owner =
@@ -268,6 +272,8 @@ Made with ❤️ by
             }
 
             if (connection === "close") {
+                if (global.sock === sock) global.sockReady = false;
+
                 const statusCode = lastDisconnect?.error?.output?.statusCode;
 
                 console.log("❌ Connection closed. Code:", statusCode);
