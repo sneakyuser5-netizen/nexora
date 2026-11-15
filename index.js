@@ -599,7 +599,7 @@ const START_TIME = Date.now();
 global.START_TIME = START_TIME;
 
 
-
+/*
 async function boot() {
     try {
         if (process.env.TERMUX_VERSION ||
@@ -608,6 +608,32 @@ async function boot() {
             console.log("📱 Termux detected: skipping Linux Lottie converter setup.");
         } else {
             await require("./scripts/install-python-deps")();
+            await require("./scripts/install-lottie-converter")();
+        }
+
+        startBot();
+    } catch (error) {
+        console.error("❌ Startup dependency setup failed:", error.message);
+        process.exit(1);
+    }
+}
+
+boot();
+*/
+async function boot() {
+    try {
+        // Python dependencies work on Android/Termux too.
+        await require("./scripts/install-python-deps")();
+
+        const isAndroid =
+            require("node:os").platform() === "android" ||
+            Boolean(process.env.TERMUX_VERSION) ||
+            Boolean(process.env.ANDROID_ROOT) ||
+            (process.env.PREFIX || "").includes("com.termux");
+
+        if (isAndroid) {
+            console.log("📱 Android/Termux detected: skipping Linux-only Lottie converter setup.");
+        } else {
             await require("./scripts/install-lottie-converter")();
         }
 
